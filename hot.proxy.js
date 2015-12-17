@@ -26,7 +26,7 @@ var app = new require('express')();
 var compiler = webpack(config);
 app.use(webpackDevMiddleware(compiler, { noInfo: true, publicPath: config.output.publicPath }));
 app.use(webpackHotMiddleware(compiler));
-app.use(proxy('http://localhost:' + (port - 1)));
+app.use(proxy('http://app:' + (port - 1)));
 
 app.listen(port, function(error) {
   if (error) {
@@ -35,3 +35,9 @@ app.listen(port, function(error) {
     console.info("==> 🌎  Listening on port %s. Open up http://localhost:%s/ in your browser.", port, port);
   }
 });
+
+// workaround for this: https://github.com/nodejs/node/issues/4182
+process.on('SIGINT', function() {
+    process.exit();
+});
+
